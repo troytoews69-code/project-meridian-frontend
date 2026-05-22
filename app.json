@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "woman-over-40-health-app-frontend",
-    "slug": "woman-over-40-health-app-frontend",
+    "name": "women-over-40-health-app",
+    "slug": "women-over-40-health-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "womanover40healthappfrontend",
+    "scheme": "womenover40healthapp",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
