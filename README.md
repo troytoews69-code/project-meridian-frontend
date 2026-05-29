@@ -30,15 +30,33 @@ React Native mobile app for women-over-40-health-app, built with Expo.
 
 4. Scan the QR code with Expo Go on your phone
 
+## Render Deployment
+
+This project can be deployed to Render as a static site.
+
+Build command:
+
+```bash
+npm install && npm run build:web
+```
+
+Publish directory:
+
+```bash
+dist
+```
+
+The app expects a public backend URL in `EXPO_PUBLIC_API_URL`.
+
 ## Environment Variables
 
 Create a `.env` file in the root:
 
 ```env
-EXPO_PUBLIC_API_URL=http://YOUR_LOCAL_IP:5000
+EXPO_PUBLIC_API_URL=https://your-backend.onrender.com
 ```
 
-Important: use your machine's local IP address, not localhost, when connecting from a physical device.
+For local development, point this variable to your local machine's IP and port. For Render, set it to the deployed backend service URL.
 
 ## Project Docs
 
