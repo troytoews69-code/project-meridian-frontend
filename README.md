@@ -60,4 +60,21 @@ For local development, point this variable to your local machine's IP and port. 
 
 ## Project Docs
 
-See the [docs](docs) folder for the project proposal and architecture diagram.
+See the [docs](docs) folder for:
+
+- Project proposal: [docs/proposal.md](docs/proposal.md)
+- Architecture and design board: [docs/architecture.excalidraw](docs/architecture.excalidraw)
+- UX user flows and wireframes spec: [docs/ux-user-flows-wireframes.md](docs/ux-user-flows-wireframes.md)
+- One-page presentation user flow: [docs/user-flow-one-page.md](docs/user-flow-one-page.md)
+- Single-slide presentation version: [docs/slide-user-flow.md](docs/slide-user-flow.md)
+- Executive slide version: [docs/slide-user-flow-executive.md](docs/slide-user-flow-executive.md)
+- Technical slide version: [docs/slide-user-flow-technical.md](docs/slide-user-flow-technical.md)
+- 5-minute presentation talk track: [docs/talk-track-5-minute.md](docs/talk-track-5-minute.md)
+- 5-minute cue cards (ultra-short): [docs/talk-track-5-minute-cue-cards.md](docs/talk-track-5-minute-cue-cards.md)
+- Presenter card (phone view): [docs/presenter-card-mobile.md](docs/presenter-card-mobile.md)
+- Audience cheat-sheet and deck order: [docs/pitch-audience-cheat-sheet.md](docs/pitch-audience-cheat-sheet.md)
+- Implementation ticket backlog: [docs/implementation-tickets.md](docs/implementation-tickets.md)
+- GitHub Issues ready copy/paste blocks: [docs/github-issues-ready.md](docs/github-issues-ready.md)
+- Mobile device smoke tests (1.0): [docs/mobile-smoke-tests-1.0.md](docs/mobile-smoke-tests-1.0.md)
+- Release checklist (1.0): [docs/release-checklist-1.0.md](docs/release-checklist-1.0.md)
+- Go-live week plan: [docs/go-live-week-plan.md](docs/go-live-week-plan.md)
