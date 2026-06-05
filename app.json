@@ -46,8 +46,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "bb62fff1-7436-4637-a136-315227e7d3a2"
+        "projectId": "e10bf54e-aaee-4199-8094-3e30270fcf38"
       }
-    }
+    },
+    "owner": "moodysprite"
   }
 }
