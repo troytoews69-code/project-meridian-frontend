@@ -103,11 +103,7 @@ export type PreferenceUpdatePayload = {
   timezone?: string;
 };
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
-
-if (!API_URL) {
-  throw new Error('EXPO_PUBLIC_API_URL is not configured. Please set it in .env');
-}
+const API_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 
 type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -117,6 +113,10 @@ type RequestOptions = {
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', body, token } = options;
+
+  if (!API_URL) {
+    throw new Error('API URL is not configured. Please set EXPO_PUBLIC_API_URL.');
+  }
 
   const response = await fetch(`${API_URL}${path}`, {
     method,
