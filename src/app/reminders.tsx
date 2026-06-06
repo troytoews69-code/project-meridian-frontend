@@ -9,6 +9,11 @@ import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/auth-context';
 import { useTheme } from '@/hooks/use-theme';
 import { api, Reminder } from '@/services/api';
+import {
+  cancelReminderNotification,
+  requestNotificationPermission,
+  scheduleReminderNotification,
+} from '@/services/notifications';
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 
@@ -27,6 +32,11 @@ export default function RemindersScreen() {
   const [daysOfWeek, setDaysOfWeek] = useState<string[]>([...DAYS]);
   const loadRequestIdRef = useRef(0);
   const isLoadingRemindersRef = useRef(false);
+
+  // Request notification permission on mount
+  useEffect(() => {
+    void requestNotificationPermission();
+  }, []);
 
   useEffect(() => {
     async function loadReminders() {
@@ -78,6 +88,8 @@ export default function RemindersScreen() {
         daysOfWeek,
       });
       setReminders((current) => [...current, created]);
+      // Schedule the notification
+      void scheduleReminderNotification(created);
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Failed to create reminder');
     } finally {
@@ -95,6 +107,8 @@ export default function RemindersScreen() {
       setReminders((current) =>
         current.map((item) => (item._id === reminder._id ? updated : item))
       );
+      // Reschedule or cancel notification based on new state
+      void scheduleReminderNotification(updated);
     } catch (toggleError) {
       setError(toggleError instanceof Error ? toggleError.message : 'Failed to update reminder');
     }
@@ -106,6 +120,8 @@ export default function RemindersScreen() {
     try {
       await api.deleteReminder(authToken, id);
       setReminders((current) => current.filter((item) => item._id !== id));
+      // Cancel scheduled notification
+      void cancelReminderNotification(id);
     } catch (deleteError) {
       setError(deleteError instanceof Error ? deleteError.message : 'Failed to delete reminder');
     }

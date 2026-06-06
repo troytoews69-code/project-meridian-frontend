@@ -11,6 +11,16 @@ import { useAuth } from '@/context/auth-context';
 import { useTheme } from '@/hooks/use-theme';
 import { api, DailyCheckin } from '@/services/api';
 
+// Simple in-memory draft store (survives re-renders, cleared on submit)
+type DraftData = {
+  scores: Record<ScoreField, number>;
+  activityMinutes: string;
+  hydrationCups: string;
+  notes: string;
+  selectedSymptoms: string[];
+};
+const draftStore = new Map<string, DraftData>();
+
 type ScoreField = 'mood' | 'sleepQuality' | 'energyLevel' | 'symptomSeverity';
 
 const initialScores: Record<ScoreField, number> = {
@@ -19,6 +29,26 @@ const initialScores: Record<ScoreField, number> = {
   energyLevel: 5,
   symptomSeverity: 5,
 };
+
+const SYMPTOMS = [
+  'Hot flashes',
+  'Night sweats',
+  'Brain fog',
+  'Joint pain',
+  'Headache',
+  'Fatigue',
+  'Anxiety',
+  'Mood swings',
+  'Bloating',
+  'Heart palpitations',
+  'Dry skin',
+  'Insomnia',
+  'Low libido',
+  'Vaginal dryness',
+  'Weight gain',
+];
+
+const DRAFT_KEY = 'checkin_draft';
 
 export default function CheckinScreen() {
   const router = useRouter();
@@ -29,6 +59,8 @@ export default function CheckinScreen() {
   const [activityMinutes, setActivityMinutes] = useState('0');
   const [hydrationCups, setHydrationCups] = useState('0');
   const [notes, setNotes] = useState('');
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [hasDraft, setHasDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [history, setHistory] = useState<DailyCheckin[]>([]);
@@ -36,6 +68,26 @@ export default function CheckinScreen() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const loadRequestIdRef = useRef(0);
   const isLoadingHistoryRef = useRef(false);
+
+  // Load draft on mount
+  useEffect(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? null : null;
+      void raw;
+      // Use a module-level map for draft storage (works on both web and native)
+      const draft = draftStore.get(DRAFT_KEY);
+      if (draft) {
+        setScores(draft.scores);
+        setActivityMinutes(draft.activityMinutes);
+        setHydrationCups(draft.hydrationCups);
+        setNotes(draft.notes);
+        setSelectedSymptoms(draft.selectedSymptoms ?? []);
+        setHasDraft(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     async function loadHistory() {
@@ -73,6 +125,31 @@ export default function CheckinScreen() {
     setScores((current) => ({ ...current, [field]: value }));
   }
 
+  function toggleSymptom(symptom: string) {
+    setSelectedSymptoms((current) =>
+      current.includes(symptom)
+        ? current.filter((s) => s !== symptom)
+        : [...current, symptom]
+    );
+  }
+
+  function saveDraft() {
+    draftStore.set(DRAFT_KEY, { scores, activityMinutes, hydrationCups, notes, selectedSymptoms });
+    setHasDraft(true);
+    setStatusMessage('Draft saved.');
+    setTimeout(() => setStatusMessage(null), 2000);
+  }
+
+  function clearDraft() {
+    draftStore.delete(DRAFT_KEY);
+    setHasDraft(false);
+    setScores(initialScores);
+    setActivityMinutes('0');
+    setHydrationCups('0');
+    setNotes('');
+    setSelectedSymptoms([]);
+  }
+
   const recentHistory = useMemo(() => history.slice(0, 8), [history]);
   const openCheckinDetail = useCallback(
     (id: string) => {
@@ -90,6 +167,10 @@ export default function CheckinScreen() {
     setErrorMessage(null);
     setIsSubmitting(true);
 
+    const symptomNote = selectedSymptoms.length > 0
+      ? `Symptoms: ${selectedSymptoms.join(', ')}${notes ? '\n' + notes : ''}`
+      : notes;
+
     try {
       await api.upsertCheckin(authToken, {
         mood: scores.mood,
@@ -98,9 +179,11 @@ export default function CheckinScreen() {
         symptomSeverity: scores.symptomSeverity,
         activityMinutes: Number(activityMinutes) || 0,
         hydrationCups: Number(hydrationCups) || 0,
-        notes,
+        notes: symptomNote,
       });
 
+      draftStore.delete(DRAFT_KEY);
+      setHasDraft(false);
       setStatusMessage('Check-in saved successfully.');
 
       const checkins = await api.getCheckins(authToken);
@@ -118,7 +201,16 @@ export default function CheckinScreen() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <ThemedView type="backgroundElement" style={styles.card}>
             <ThemedText type="subtitle">Daily Check-In</ThemedText>
-            <ThemedText themeColor="textSecondary">Capture today health in under 90 seconds.</ThemedText>
+            <ThemedText themeColor="textSecondary">Capture today's health in under 90 seconds.</ThemedText>
+
+            {hasDraft ? (
+              <ThemedView type="background" style={styles.draftBanner}>
+                <ThemedText type="small" themeColor="textSecondary">Draft restored. Continue or clear it.</ThemedText>
+                <Pressable onPress={clearDraft}>
+                  <ThemedText type="small" themeColor="textSecondary">Clear draft</ThemedText>
+                </Pressable>
+              </ThemedView>
+            ) : null}
 
             <ScorePicker
               label="Mood"
@@ -140,6 +232,19 @@ export default function CheckinScreen() {
               value={scores.symptomSeverity}
               onChange={(value) => setScore('symptomSeverity', value)}
             />
+
+            <ThemedText type="smallBold">Symptoms today (tap to select)</ThemedText>
+            <View style={styles.symptomsGrid}>
+              {SYMPTOMS.map((symptom) => (
+                <Pressable key={symptom} onPress={() => toggleSymptom(symptom)}>
+                  <ThemedView
+                    type={selectedSymptoms.includes(symptom) ? 'backgroundSelected' : 'background'}
+                    style={styles.symptomChip}>
+                    <ThemedText type="small">{symptom}</ThemedText>
+                  </ThemedView>
+                </Pressable>
+              ))}
+            </View>
 
             <View style={styles.row}>
               <View style={styles.grow}>
@@ -175,15 +280,22 @@ export default function CheckinScreen() {
             {errorMessage ? <ThemedText themeColor="textSecondary">{errorMessage}</ThemedText> : null}
             {statusMessage ? <ThemedText>{statusMessage}</ThemedText> : null}
 
-            <Pressable onPress={submitCheckin} disabled={isSubmitting}>
-              <ThemedView type="backgroundSelected" style={styles.submitButton}>
-                {isSubmitting ? (
-                  <ActivityIndicator color={theme.text} />
-                ) : (
-                  <ThemedText type="smallBold">Save Check-In</ThemedText>
-                )}
-              </ThemedView>
-            </Pressable>
+            <View style={styles.row}>
+              <Pressable style={styles.grow} onPress={saveDraft} disabled={isSubmitting}>
+                <ThemedView type="background" style={styles.submitButton}>
+                  <ThemedText type="smallBold">Save Draft</ThemedText>
+                </ThemedView>
+              </Pressable>
+              <Pressable style={styles.grow} onPress={submitCheckin} disabled={isSubmitting}>
+                <ThemedView type="backgroundSelected" style={styles.submitButton}>
+                  {isSubmitting ? (
+                    <ActivityIndicator color={theme.text} />
+                  ) : (
+                    <ThemedText type="smallBold">Save Check-In</ThemedText>
+                  )}
+                </ThemedView>
+              </Pressable>
+            </View>
 
             <ThemedText type="smallBold">Recent Check-Ins</ThemedText>
 
@@ -291,6 +403,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.two,
     paddingVertical: Spacing.one,
     borderRadius: Spacing.two,
+  },
+  symptomsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Spacing.one,
+  },
+  symptomChip: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.one,
+    borderRadius: Spacing.two,
+  },
+  draftBanner: {
+    borderRadius: Spacing.two,
+    padding: Spacing.two,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
