@@ -66,7 +66,7 @@ const barStyles = StyleSheet.create({
   fill: { height: 6, borderRadius: 3 },
 });
 
-const METRIC_COLORS = { mood: '#208AEF', sleep: '#7C4DFF', energy: '#00BFA5', symptoms: '#FF5252' };
+const METRIC_COLORS = { mood: '#C97B84', sleep: '#9B7FA8', energy: '#6BAE8E', symptoms: '#E07B6A' };
 
 export default function TrendsScreen() {
   const router = useRouter();

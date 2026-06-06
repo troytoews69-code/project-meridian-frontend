@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.three,
     paddingTop: Spacing.two,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+    borderTopColor: 'rgba(61,43,31,0.12),'
   },
   tabItem: {
     flex: 1,

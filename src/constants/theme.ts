@@ -7,18 +7,32 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    // Warm off-white background — not harsh white
+    background: '#FDF8F5',
+    // Soft rose-tinted card surfaces
+    backgroundElement: '#F5EDE8',
+    // Warm mauve for selected/active states
+    backgroundSelected: '#E8D5CC',
+    // Deep warm brown — readable but not cold black
+    text: '#3D2B1F',
+    // Muted warm taupe for secondary text
+    textSecondary: '#8C6E63',
+    // Primary action color — soft rose
+    primary: '#C97B84',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    // Deep warm charcoal — not pure black
+    background: '#1E1512',
+    // Warm dark card surfaces
+    backgroundElement: '#2D1F1A',
+    // Warm dark selected state
+    backgroundSelected: '#3D2B22',
+    // Warm cream white — not harsh
+    text: '#F5EDE8',
+    // Muted warm secondary
+    textSecondary: '#A08075',
+    // Softer primary in dark mode
+    primary: '#D4909A',
   },
 } as const;
 
