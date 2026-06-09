@@ -1,17 +1,18 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthRequired } from '@/components/auth-required';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { BottomTabInset, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/auth-context';
-import { useTheme } from '@/hooks/use-theme';
 import { api, Note } from '@/services/api';
 
 export default function NotesScreen() {
-  const theme = useTheme();
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
   const { isAuthenticated, token } = useAuth();
 
   const [notes, setNotes] = useState<Note[]>([]);
@@ -153,7 +154,16 @@ export default function NotesScreen() {
 
   return (
     <ThemedView style={styles.root}>
-      <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.screenHeader, { backgroundColor: '#6BAE8E' }]}>
+        <SafeAreaView edges={['top']}>
+          <View style={styles.screenHeaderContent}>
+            <Ionicons name="document-text" size={22} color="#fff" />
+            <Text style={styles.screenHeaderTitle}>Notes</Text>
+          </View>
+          <Text style={styles.screenHeaderSub}>Appointment-ready notes — pin the important ones</Text>
+        </SafeAreaView>
+      </View>
+      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <FlatList
           data={notes}
           keyExtractor={(item) => item._id}
@@ -170,8 +180,8 @@ export default function NotesScreen() {
               value={title}
               onChangeText={setTitle}
               placeholder="Note title"
-              placeholderTextColor={theme.textSecondary}
-              style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+              placeholderTextColor={colors.textSecondary}
+              style={[styles.input, { color: colors.text, borderColor: colors.backgroundSelected }]}
             />
 
             <TextInput
@@ -179,18 +189,18 @@ export default function NotesScreen() {
               onChangeText={setContent}
               multiline
               placeholder="Write your note"
-              placeholderTextColor={theme.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               style={[
                 styles.input,
                 styles.contentInput,
-                { color: theme.text, borderColor: theme.backgroundSelected },
+                { color: colors.text, borderColor: colors.backgroundSelected },
               ]}
             />
 
             <Pressable onPress={handleSaveNote} disabled={isSaving}>
               <ThemedView type="backgroundSelected" style={styles.button}>
                 {isSaving ? (
-                  <ActivityIndicator color={theme.text} />
+                  <ActivityIndicator color={colors.text} />
                 ) : (
                   <ThemedText type="smallBold">{editingId ? 'Save Note' : 'Add Note'}</ThemedText>
                 )}
@@ -275,6 +285,18 @@ const NoteRow = React.memo(function NoteRow({
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  screenHeader: {
+    paddingHorizontal: Spacing.four,
+    paddingBottom: Spacing.three,
+  },
+  screenHeaderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    paddingTop: Spacing.two,
+  },
+  screenHeaderTitle: { color: '#fff', fontSize: 20, fontWeight: '700' },
+  screenHeaderSub: { color: 'rgba(255,255,255,0.82)', fontSize: 12, marginTop: 4, paddingBottom: 2 },
   safeArea: {
     flex: 1,
     maxWidth: MaxContentWidth,

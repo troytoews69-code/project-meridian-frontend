@@ -1,39 +1,46 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from 'expo-router/ui';
 import React from 'react';
-import { Image, ImageSourcePropType, Pressable, StyleSheet } from 'react-native';
-import { useColorScheme } from 'react-native';
+import { Pressable, StyleSheet, useColorScheme } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors, Spacing } from '@/constants/theme';
 
-const homeIcon = require('@/assets/images/tabIcons/home.png');
-const exploreIcon = require('@/assets/images/tabIcons/explore.png');
+type TabConfig = {
+  name: string;
+  href: string;
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  activeIcon: keyof typeof Ionicons.glyphMap;
+};
 
-const TABS: { name: string; href: string; label: string; icon: ImageSourcePropType }[] = [
-  { name: 'index', href: '/', label: 'Home', icon: homeIcon },
-  { name: 'checkin', href: '/checkin', label: 'Check-In', icon: homeIcon },
-  { name: 'trends', href: '/trends', label: 'Trends', icon: exploreIcon },
-  { name: 'notes', href: '/notes', label: 'Notes', icon: homeIcon },
-  { name: 'reminders', href: '/reminders', label: 'Reminders', icon: exploreIcon },
+const TABS: TabConfig[] = [
+  { name: 'index', href: '/', label: 'Home', icon: 'home-outline', activeIcon: 'home' },
+  { name: 'checkin', href: '/checkin', label: 'Check-In', icon: 'clipboard-outline', activeIcon: 'clipboard' },
+  { name: 'trends', href: '/trends', label: 'Trends', icon: 'bar-chart-outline', activeIcon: 'bar-chart' },
+  { name: 'learn', href: '/learn', label: 'Learn', icon: 'book-outline', activeIcon: 'book' },
+  { name: 'notes', href: '/notes', label: 'Notes', icon: 'document-text-outline', activeIcon: 'document-text' },
+  { name: 'reminders', href: '/reminders', label: 'Reminders', icon: 'notifications-outline', activeIcon: 'notifications' },
 ];
 
 function TabButton({
   isFocused,
   icon,
+  activeIcon,
   label,
   ...props
-}: TabTriggerSlotProps & { icon: ImageSourcePropType; label: string }) {
+}: TabTriggerSlotProps & { icon: keyof typeof Ionicons.glyphMap; activeIcon: keyof typeof Ionicons.glyphMap; label: string }) {
   const scheme = useColorScheme();
   const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
+  const color = isFocused ? colors.primary : colors.textSecondary;
 
   return (
     <Pressable {...props} style={styles.tabItem}>
-      <Image
-        source={icon}
-        style={[styles.icon, { tintColor: isFocused ? colors.text : colors.textSecondary }]}
-      />
-      <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
+      <Ionicons name={isFocused ? activeIcon : icon} size={22} color={color} />
+      <ThemedText
+        type="small"
+        style={[styles.tabLabel, { color, fontSize: 10, fontWeight: isFocused ? '700' : '500' }]}>
         {label}
       </ThemedText>
     </Pressable>
@@ -48,7 +55,7 @@ export default function AppTabs() {
         <ThemedView type="backgroundElement" style={styles.tabBar}>
           {TABS.map((tab) => (
             <TabTrigger key={tab.name} name={tab.name} href={tab.href as any} asChild>
-              <TabButton icon={tab.icon} label={tab.label} />
+              <TabButton icon={tab.icon} activeIcon={tab.activeIcon} label={tab.label} />
             </TabTrigger>
           ))}
         </ThemedView>
@@ -69,15 +76,15 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.three,
     paddingTop: Spacing.two,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(61,43,31,0.12),'
+    borderTopColor: 'rgba(61,43,31,0.12)',
   },
   tabItem: {
     flex: 1,
     alignItems: 'center',
-    gap: Spacing.one,
+    gap: 2,
   },
-  icon: {
-    width: 22,
-    height: 22,
+  tabLabel: {
+    lineHeight: 14,
   },
 });
+

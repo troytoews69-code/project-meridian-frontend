@@ -1,15 +1,23 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthRequired } from '@/components/auth-required';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { BottomTabInset, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/auth-context';
-import { useTheme } from '@/hooks/use-theme';
-import { api, DailyCheckin } from '@/services/api';
+import { api, DailyCheckin, PeriodFlow } from '@/services/api';
+
+const PERIOD_OPTIONS: { value: PeriodFlow; label: string; emoji: string }[] = [
+  { value: 'none', label: 'None', emoji: '—' },
+  { value: 'spotting', label: 'Spotting', emoji: '🔴' },
+  { value: 'light', label: 'Light', emoji: '🩸' },
+  { value: 'medium', label: 'Medium', emoji: '🩸🩸' },
+  { value: 'heavy', label: 'Heavy', emoji: '🩸🩸🩸' },
+];
 
 // Simple in-memory draft store (survives re-renders, cleared on submit)
 type DraftData = {
@@ -52,7 +60,8 @@ const DRAFT_KEY = 'checkin_draft';
 
 export default function CheckinScreen() {
   const router = useRouter();
-  const theme = useTheme();
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
   const { isAuthenticated, token } = useAuth();
 
   const [scores, setScores] = useState(initialScores);
@@ -60,6 +69,7 @@ export default function CheckinScreen() {
   const [hydrationCups, setHydrationCups] = useState('0');
   const [notes, setNotes] = useState('');
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [periodFlow, setPeriodFlow] = useState<PeriodFlow>('none');
   const [hasDraft, setHasDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -72,8 +82,6 @@ export default function CheckinScreen() {
   // Load draft on mount
   useEffect(() => {
     try {
-      const raw = typeof window !== 'undefined' ? null : null;
-      void raw;
       // Use a module-level map for draft storage (works on both web and native)
       const draft = draftStore.get(DRAFT_KEY);
       if (draft) {
@@ -180,6 +188,7 @@ export default function CheckinScreen() {
         activityMinutes: Number(activityMinutes) || 0,
         hydrationCups: Number(hydrationCups) || 0,
         notes: symptomNote,
+        periodFlow,
       });
 
       draftStore.delete(DRAFT_KEY);
@@ -197,11 +206,18 @@ export default function CheckinScreen() {
 
   return (
     <ThemedView style={styles.root}>
-      <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.screenHeader, { backgroundColor: colors.primary }]}>
+        <SafeAreaView edges={['top']}>
+          <View style={styles.screenHeaderContent}>
+            <Ionicons name="clipboard" size={22} color="#fff" />
+            <Text style={styles.screenHeaderTitle}>Daily Check-In</Text>
+          </View>
+          <Text style={styles.screenHeaderSub}>Capture today's wellness in under 2 minutes</Text>
+        </SafeAreaView>
+      </View>
+      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <ThemedView type="backgroundElement" style={styles.card}>
-            <ThemedText type="subtitle">Daily Check-In</ThemedText>
-            <ThemedText themeColor="textSecondary">Capture today's health in under 90 seconds.</ThemedText>
 
             {hasDraft ? (
               <ThemedView type="background" style={styles.draftBanner}>
@@ -253,7 +269,7 @@ export default function CheckinScreen() {
                   value={activityMinutes}
                   onChangeText={setActivityMinutes}
                   keyboardType="numeric"
-                  style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+                  style={[styles.input, { color: colors.text, borderColor: colors.backgroundSelected }]}
                 />
               </View>
               <View style={styles.grow}>
@@ -262,9 +278,29 @@ export default function CheckinScreen() {
                   value={hydrationCups}
                   onChangeText={setHydrationCups}
                   keyboardType="numeric"
-                  style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+                  style={[styles.input, { color: colors.text, borderColor: colors.backgroundSelected }]}
                 />
               </View>
+            </View>
+
+            <ThemedText type="smallBold">Period Flow</ThemedText>
+            <ThemedText type="small" themeColor="textSecondary">
+              Track your cycle alongside symptoms — helps identify patterns.
+            </ThemedText>
+            <View style={styles.periodRow}>
+              {PERIOD_OPTIONS.map((opt) => (
+                <Pressable key={opt.value} onPress={() => setPeriodFlow(opt.value)} style={styles.periodItem}>
+                  <ThemedView
+                    type={periodFlow === opt.value ? 'backgroundSelected' : 'background'}
+                    style={[
+                      styles.periodChip,
+                      periodFlow === opt.value && { borderColor: colors.primary, borderWidth: 1.5 },
+                    ]}>
+                    <Text style={styles.periodEmoji}>{opt.emoji}</Text>
+                    <ThemedText type="small" style={{ fontSize: 11 }}>{opt.label}</ThemedText>
+                  </ThemedView>
+                </Pressable>
+              ))}
             </View>
 
             <ThemedText type="smallBold">Notes</ThemedText>
@@ -273,8 +309,8 @@ export default function CheckinScreen() {
               onChangeText={setNotes}
               multiline
               placeholder="Optional notes for today"
-              placeholderTextColor={theme.textSecondary}
-              style={[styles.input, styles.notesInput, { color: theme.text, borderColor: theme.backgroundSelected }]}
+              placeholderTextColor={colors.textSecondary}
+              style={[styles.input, styles.notesInput, { color: colors.text, borderColor: colors.backgroundSelected }]}
             />
 
             {errorMessage ? <ThemedText themeColor="textSecondary">{errorMessage}</ThemedText> : null}
@@ -289,7 +325,7 @@ export default function CheckinScreen() {
               <Pressable style={styles.grow} onPress={submitCheckin} disabled={isSubmitting}>
                 <ThemedView type="backgroundSelected" style={styles.submitButton}>
                   {isSubmitting ? (
-                    <ActivityIndicator color={theme.text} />
+                    <ActivityIndicator color={colors.text} />
                   ) : (
                     <ThemedText type="smallBold">Save Check-In</ThemedText>
                   )}
@@ -371,9 +407,19 @@ function ScorePicker({
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
+  root: { flex: 1 },
+  screenHeader: {
+    paddingHorizontal: Spacing.four,
+    paddingBottom: Spacing.three,
   },
+  screenHeaderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    paddingTop: Spacing.two,
+  },
+  screenHeaderTitle: { color: '#fff', fontSize: 20, fontWeight: '700' },
+  screenHeaderSub: { color: 'rgba(255,255,255,0.82)', fontSize: 12, marginTop: 4, paddingBottom: 2 },
   safeArea: {
     flex: 1,
     maxWidth: MaxContentWidth,
@@ -382,6 +428,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.four,
     paddingBottom: BottomTabInset + Spacing.three,
   },
+  periodRow: {
+    flexDirection: 'row',
+    gap: Spacing.one,
+    flexWrap: 'wrap',
+  },
+  periodItem: { flex: 1, minWidth: 58 },
+  periodChip: {
+    borderRadius: Spacing.two,
+    paddingVertical: Spacing.two,
+    alignItems: 'center',
+    gap: 2,
+    borderWidth: 1.5,
+    borderColor: 'transparent',
+  },
+  periodEmoji: { fontSize: 16 },
   scrollContent: {
     paddingTop: Spacing.three,
     paddingBottom: Spacing.four,

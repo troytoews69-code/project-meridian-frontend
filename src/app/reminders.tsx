@@ -1,13 +1,13 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Switch, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Switch, Text, TextInput, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthRequired } from '@/components/auth-required';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { BottomTabInset, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/auth-context';
-import { useTheme } from '@/hooks/use-theme';
 import { api, Reminder } from '@/services/api';
 import {
   cancelReminderNotification,
@@ -18,7 +18,8 @@ import {
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 
 export default function RemindersScreen() {
-  const theme = useTheme();
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
   const { isAuthenticated, token } = useAuth();
 
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -156,7 +157,16 @@ export default function RemindersScreen() {
 
   return (
     <ThemedView style={styles.root}>
-      <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.screenHeader, { backgroundColor: '#E07B6A' }]}>
+        <SafeAreaView edges={['top']}>
+          <View style={styles.screenHeaderContent}>
+            <Ionicons name="notifications" size={22} color="#fff" />
+            <Text style={styles.screenHeaderTitle}>Reminders</Text>
+          </View>
+          <Text style={styles.screenHeaderSub}>Schedule daily check-in reminders</Text>
+        </SafeAreaView>
+      </View>
+      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <FlatList
           data={reminders}
           keyExtractor={(item) => item._id}
@@ -173,24 +183,24 @@ export default function RemindersScreen() {
               value={title}
               onChangeText={setTitle}
               placeholder="Reminder title"
-              placeholderTextColor={theme.textSecondary}
-              style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+              placeholderTextColor={colors.textSecondary}
+              style={[styles.input, { color: colors.text, borderColor: colors.backgroundSelected }]}
             />
 
             <TextInput
               value={time}
               onChangeText={setTime}
               placeholder="HH:MM"
-              placeholderTextColor={theme.textSecondary}
-              style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+              placeholderTextColor={colors.textSecondary}
+              style={[styles.input, { color: colors.text, borderColor: colors.backgroundSelected }]}
             />
 
             <TextInput
               value={message}
               onChangeText={setMessage}
               placeholder="Optional message"
-              placeholderTextColor={theme.textSecondary}
-              style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+              placeholderTextColor={colors.textSecondary}
+              style={[styles.input, { color: colors.text, borderColor: colors.backgroundSelected }]}
             />
 
             <ThemedText type="smallBold">Days of week</ThemedText>
@@ -209,7 +219,7 @@ export default function RemindersScreen() {
             <Pressable onPress={handleCreateReminder} disabled={isSaving}>
               <ThemedView type="backgroundSelected" style={styles.button}>
                 {isSaving ? (
-                  <ActivityIndicator color={theme.text} />
+                  <ActivityIndicator color={colors.text} />
                 ) : (
                   <ThemedText type="smallBold">Add Reminder</ThemedText>
                 )}
@@ -271,6 +281,18 @@ const ReminderRow = React.memo(function ReminderRow({
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  screenHeader: {
+    paddingHorizontal: Spacing.four,
+    paddingBottom: Spacing.three,
+  },
+  screenHeaderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    paddingTop: Spacing.two,
+  },
+  screenHeaderTitle: { color: '#fff', fontSize: 20, fontWeight: '700' },
+  screenHeaderSub: { color: 'rgba(255,255,255,0.82)', fontSize: 12, marginTop: 4, paddingBottom: 2 },
   safeArea: {
     flex: 1,
     maxWidth: MaxContentWidth,

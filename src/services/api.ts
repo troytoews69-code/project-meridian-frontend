@@ -11,6 +11,8 @@ export type AuthResponse = {
   user: AuthUser;
 };
 
+export type PeriodFlow = 'none' | 'spotting' | 'light' | 'medium' | 'heavy';
+
 export type DailyCheckin = {
   _id: string;
   checkinDate: string;
@@ -21,6 +23,7 @@ export type DailyCheckin = {
   activityMinutes: number;
   hydrationCups: number;
   notes: string;
+  periodFlow?: PeriodFlow;
   createdAt: string;
   updatedAt: string;
 };
@@ -181,6 +184,7 @@ export const api = {
       hydrationCups?: number;
       notes?: string;
       checkinDate?: string;
+      periodFlow?: PeriodFlow;
     }
   ) => request<DailyCheckin>('/api/checkins', { method: 'POST', body: payload, token }),
 

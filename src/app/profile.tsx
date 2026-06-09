@@ -1,17 +1,20 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthRequired } from '@/components/auth-required';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { BottomTabInset, Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useAuth } from '@/context/auth-context';
 import { api, ProfileResponse } from '@/services/api';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
   const { isAuthenticated, token } = useAuth();
 
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
@@ -46,10 +49,30 @@ export default function ProfileScreen() {
 
   return (
     <ThemedView style={styles.root}>
-      <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.screenHeader, { backgroundColor: '#6BAE8E' }]}>
+        <SafeAreaView edges={['top']}>
+          <View style={styles.profileHeaderContent}>
+            <View style={styles.profileAvatar}>
+              <Text style={styles.profileAvatarText}>
+                {profile?.user?.name
+                  ? profile.user.name.trim().split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+                  : '?'}
+              </Text>
+            </View>
+            <View style={styles.profileHeaderTextCol}>
+              <Text style={styles.screenHeaderTitle}>{profile?.user?.name ?? 'Profile'}</Text>
+              <Text style={styles.screenHeaderSub}>{profile?.user?.email ?? ''}</Text>
+            </View>
+          </View>
+        </SafeAreaView>
+      </View>
+      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <ThemedView type="backgroundElement" style={styles.card}>
-            <ThemedText type="subtitle">Profile</ThemedText>
+            <View style={styles.sectionTitleRow}>
+              <Ionicons name="person-circle-outline" size={20} color="#6BAE8E" />
+              <ThemedText type="smallBold" style={{ color: '#6BAE8E' }}>Account Details</ThemedText>
+            </View>
 
             {isLoading ? (
               <View style={styles.loadingRow}>
@@ -87,6 +110,29 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  screenHeader: {
+    paddingHorizontal: Spacing.four,
+    paddingBottom: Spacing.three,
+  },
+  profileHeaderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+    paddingTop: Spacing.two,
+  },
+  profileAvatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileAvatarText: { color: '#fff', fontSize: 20, fontWeight: '700' },
+  profileHeaderTextCol: { flex: 1 },
+  screenHeaderTitle: { color: '#fff', fontSize: 20, fontWeight: '700' },
+  screenHeaderSub: { color: 'rgba(255,255,255,0.82)', fontSize: 12, marginTop: 2 },
+  sectionTitleRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one },
   safeArea: {
     flex: 1,
     maxWidth: MaxContentWidth,
