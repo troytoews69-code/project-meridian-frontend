@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from 'expo-router/ui';
 import React from 'react';
 import { Pressable, StyleSheet, useColorScheme } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -48,11 +49,13 @@ function TabButton({
 }
 
 export default function AppTabs() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs style={styles.container}>
       <TabSlot style={styles.slot} />
       <TabList asChild>
-        <ThemedView type="backgroundElement" style={styles.tabBar}>
+        <ThemedView type="backgroundElement" style={[styles.tabBar, { paddingBottom: Math.max(insets.bottom, Spacing.two) }]}>
           {TABS.map((tab) => (
             <TabTrigger key={tab.name} name={tab.name} href={tab.href as any} asChild>
               <TabButton icon={tab.icon} activeIcon={tab.activeIcon} label={tab.label} />
@@ -73,7 +76,6 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    paddingBottom: Spacing.three,
     paddingTop: Spacing.two,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: 'rgba(61,43,31,0.12)',
