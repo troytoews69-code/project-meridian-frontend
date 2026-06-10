@@ -50,7 +50,7 @@ export default function ProfileScreen() {
   return (
     <ThemedView style={styles.root}>
       <View style={[styles.screenHeader, { backgroundColor: '#6BAE8E' }]}>
-        <SafeAreaView edges={['top']}>
+        <View>
           <View style={styles.profileHeaderContent}>
             <View style={styles.profileAvatar}>
               <Text style={styles.profileAvatarText}>
@@ -64,7 +64,7 @@ export default function ProfileScreen() {
               <Text style={styles.screenHeaderSub}>{profile?.user?.email ?? ''}</Text>
             </View>
           </View>
-        </SafeAreaView>
+        </View>
       </View>
       <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -167,3 +167,4 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
 });
+

@@ -53,9 +53,8 @@ export default function AppTabs() {
 
   return (
     <Tabs style={styles.container}>
-      <TabSlot style={styles.slot} />
       <TabList asChild>
-        <ThemedView type="backgroundElement" style={[styles.tabBar, { paddingBottom: Math.max(insets.bottom, Spacing.two) }]}>
+        <ThemedView type="backgroundElement" style={[styles.tabBar, { paddingTop: insets.top + Spacing.one }]}>
           {TABS.map((tab) => (
             <TabTrigger key={tab.name} name={tab.name} href={tab.href as any} asChild>
               <TabButton icon={tab.icon} activeIcon={tab.activeIcon} label={tab.label} />
@@ -63,6 +62,7 @@ export default function AppTabs() {
           ))}
         </ThemedView>
       </TabList>
+      <TabSlot style={styles.slot} />
     </Tabs>
   );
 }
@@ -76,9 +76,9 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    paddingTop: Spacing.two,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(61,43,31,0.12)',
+    paddingBottom: Spacing.two,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'rgba(61,43,31,0.12)',
   },
   tabItem: {
     flex: 1,

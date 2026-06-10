@@ -186,13 +186,13 @@ export default function TrendsScreen() {
   return (
     <ThemedView style={styles.root}>
       <View style={[styles.screenHeader, { backgroundColor: '#9B7FA8' }]}>
-        <SafeAreaView edges={['top']}>
+        <View>
           <View style={styles.screenHeaderContent}>
             <Ionicons name="bar-chart" size={22} color="#fff" />
             <Text style={styles.screenHeaderTitle}>Trends</Text>
           </View>
           <Text style={styles.screenHeaderSub}>Review your patterns over time</Text>
-        </SafeAreaView>
+        </View>
       </View>
       <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -382,3 +382,4 @@ const styles = StyleSheet.create({
   barValue: { width: 28, textAlign: 'right' },
   shareButton: { borderRadius: Spacing.three, paddingVertical: Spacing.two, alignItems: 'center' },
 });
+

@@ -158,13 +158,13 @@ export default function RemindersScreen() {
   return (
     <ThemedView style={styles.root}>
       <View style={[styles.screenHeader, { backgroundColor: '#E07B6A' }]}>
-        <SafeAreaView edges={['top']}>
+        <View>
           <View style={styles.screenHeaderContent}>
             <Ionicons name="notifications" size={22} color="#fff" />
             <Text style={styles.screenHeaderTitle}>Reminders</Text>
           </View>
           <Text style={styles.screenHeaderSub}>Schedule daily check-in reminders</Text>
-        </SafeAreaView>
+        </View>
       </View>
       <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <FlatList
@@ -359,3 +359,4 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.one,
   },
 });
+

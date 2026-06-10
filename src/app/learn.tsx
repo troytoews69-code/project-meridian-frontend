@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, useColorScheme } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -314,7 +313,7 @@ export default function LearnScreen() {
 
   return (
     <ThemedView style={styles.root}>
-      <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <View style={styles.safeArea}>
         {/* Colored header */}
         <View style={[styles.header, { backgroundColor: colors.primary }]}>
           <ThemedText style={styles.headerTitle}>Learn</ThemedText>
@@ -374,7 +373,7 @@ export default function LearnScreen() {
             );
           })}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </ThemedView>
   );
 }

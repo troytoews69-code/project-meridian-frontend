@@ -138,7 +138,7 @@ export default function HomeScreen() {
     <ThemedView style={styles.root}>
       {/* ── Colored header ── */}
       <View style={[styles.header, { backgroundColor: colors.primary }]}>
-        <SafeAreaView edges={['top']}>
+        <View>
           <View style={styles.headerContent}>
             {isAuthenticated ? (
               <>
@@ -159,7 +159,7 @@ export default function HomeScreen() {
               </View>
             )}
           </View>
-        </SafeAreaView>
+        </View>
       </View>
 
       <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
@@ -540,4 +540,5 @@ const styles = StyleSheet.create({
   },
   signOutBtn: { alignItems: 'center', paddingVertical: Spacing.two },
 });
+
 
