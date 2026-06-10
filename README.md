@@ -1,6 +1,66 @@
-# women-over-40-health-app - Frontend
+# Women Over 40 Health App — Frontend
 
-React Native mobile app for women-over-40-health-app, built with Expo.
+React Native mobile app built with Expo, designed for women navigating perimenopause and menopause.
+
+---
+
+## Pitch Day Talk Track
+
+> Use this section when presenting to investors, judges, or stakeholders. Adapt the tone to the room.
+
+### The Problem (30 seconds)
+
+Forty-seven million women in the United States are currently in perimenopause or menopause. The average woman spends 7 to 10 years in this transition. During that time she will experience mood swings, sleep disruption, brain fog, hot flashes, joint pain, weight shifts, and changes to her heart health and bone density — often all at once, often without answers.
+
+She goes to her doctor. She gets 12 minutes. She has no data. She leaves with a shrug and a pamphlet.
+
+There is no app built specifically for her. There are period trackers built for 22-year-olds. There are symptom loggers that look like spreadsheets. There is nothing warm, intelligent, and designed around the actual biology of this life stage.
+
+Until now.
+
+---
+
+### The Product (60 seconds)
+
+**Women Over 40** is a daily health companion for women in perimenopause and menopause.
+
+Every morning she opens the app and does a quick check-in — mood, sleep quality, energy, symptoms, and period flow. Over time the app builds a picture of her patterns. She can see her trends week over week. She can read evidence-based articles informed by leading women's health research. She can set reminders for supplements, medications, and appointments. She can write private notes about how she's feeling.
+
+And when she walks into that 12-minute appointment, she hits one button — **Generate Doctor Report** — and hands her doctor a clean summary of the last 30 days. Mood trends. Sleep patterns. Symptom frequency. Period changes. In 30 seconds she becomes the most prepared patient in the waiting room.
+
+The app was built with warmth. Warm rose tones, sage greens, soft purples. Not a clinical tool. A companion.
+
+---
+
+### The Tech (30 seconds, for technical audiences)
+
+- React Native with Expo SDK 55, targeting iOS and Android
+- Node.js / Express backend deployed on Render
+- MongoDB for user data and health history
+- JWT authentication with secure token storage on device
+- EAS Build for cloud-compiled native APKs
+- Onboarding flow that captures menopause stage and priority symptoms on first launch
+- Full TypeScript, zero compiler errors
+
+---
+
+### The Market (30 seconds)
+
+The global menopause market is valued at over $600 billion and growing. The femtech market is projected to reach $75 billion by 2030. Digital health apps are one of the fastest-growing categories in the App Store and Google Play.
+
+The women who need this app are 40 to 60 years old. They have disposable income. They are underserved by existing technology. And they are increasingly vocal about demanding better.
+
+---
+
+### The Ask
+
+We are looking for partners who believe that women in the second half of their lives deserve technology built *for* them — not adapted from tools designed for someone else.
+
+This app exists. It works. It is on device today.
+
+Let's talk about what comes next.
+
+---
 
 ## Prerequisites
 
