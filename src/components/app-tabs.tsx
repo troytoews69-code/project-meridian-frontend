@@ -1,11 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from 'expo-router/ui';
 import React from 'react';
-import { Pressable, StyleSheet, useColorScheme } from 'react-native';
+import { Pressable, StyleSheet, View, useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Colors, Spacing } from '@/constants/theme';
 
 type TabConfig = {
@@ -34,7 +33,7 @@ function TabButton({
 }: TabTriggerSlotProps & { icon: keyof typeof Ionicons.glyphMap; activeIcon: keyof typeof Ionicons.glyphMap; label: string }) {
   const scheme = useColorScheme();
   const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
-  const color = isFocused ? colors.primary : colors.textSecondary;
+  const color = isFocused ? '#fff' : 'rgba(255,255,255,0.6)';
 
   return (
     <Pressable {...props} style={styles.tabItem}>
@@ -50,17 +49,19 @@ function TabButton({
 
 export default function AppTabs() {
   const insets = useSafeAreaInsets();
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
 
   return (
     <Tabs style={styles.container}>
       <TabList asChild>
-        <ThemedView type="backgroundElement" style={[styles.tabBar, { paddingTop: insets.top + Spacing.one }]}>
+        <View style={[styles.tabBar, { backgroundColor: colors.primary, paddingTop: insets.top + Spacing.one }]}>
           {TABS.map((tab) => (
             <TabTrigger key={tab.name} name={tab.name} href={tab.href as any} asChild>
               <TabButton icon={tab.icon} activeIcon={tab.activeIcon} label={tab.label} />
             </TabTrigger>
           ))}
-        </ThemedView>
+        </View>
       </TabList>
       <TabSlot style={styles.slot} />
     </Tabs>

@@ -1,7 +1,7 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 
 import AppTabs from '@/components/app-tabs';
 import OnboardingFlow from '@/components/onboarding-flow';
@@ -32,6 +32,7 @@ export default function TabLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       {needsOnboarding ? (
         <OnboardingFlow onComplete={() => setNeedsOnboarding(false)} />
       ) : (
