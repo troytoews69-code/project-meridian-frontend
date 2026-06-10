@@ -4,6 +4,44 @@ React Native mobile app built with Expo, designed for women navigating perimenop
 
 ---
 
+## How to Install & Run the App
+
+There are three ways to get the app running on your Android phone. Pick whichever is easiest.
+
+---
+
+### Option 1 — Install via APK file (simplest, no accounts needed)
+
+1. Download the APK file provided to you (filename: `women-over-40-health-app.apk`)
+2. Transfer it to your Android phone — email it to yourself, upload to Google Drive, or copy via USB
+3. Open the file on your phone using your file manager (Files app, My Files, etc.)
+4. If prompted, tap **"Install anyway"** or enable **"Install unknown apps"**:
+   - Go to **Settings → Apps → Special app access → Install unknown apps**
+   - Find your file manager or browser → toggle **"Allow from this source"** ON
+5. Tap **Install** — the app will appear in your app drawer as **Women Over 40**
+
+> **Note:** You may see a Google Play Protect warning — tap **"Install anyway"**. This is normal for APKs distributed outside the Play Store.
+
+---
+
+### Option 2 — Install via Expo link (easiest, just tap a link)
+
+1. On your Android phone, open this link in your browser:
+   **https://expo.dev/accounts/moodysprite/projects/women-over-40-health-app/builds/c12d0353-d9ea-4fde-9622-64a5fbe76b91**
+2. Tap **Download** on the page
+3. Open the downloaded APK and follow the same install steps as Option 1 (step 4–5 above)
+
+---
+
+### Option 3 — Review the source code on GitHub
+
+- **Frontend (this repo):** https://github.com/troytoews69-code/project-meridian-frontend
+- **Backend:** https://github.com/troytoews69-code/project-meridian-backend
+
+The frontend is a React Native / Expo app (TypeScript). The backend is Node.js / Express with MongoDB, deployed on Render.
+
+---
+
 ## Pitch Day Talk Track
 
 > Use this section when presenting to investors, judges, or stakeholders. Adapt the tone to the room.
