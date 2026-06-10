@@ -155,13 +155,13 @@ export default function NotesScreen() {
   return (
     <ThemedView style={styles.root}>
       <View style={[styles.screenHeader, { backgroundColor: '#6BAE8E' }]}>
-        <View>
+        <SafeAreaView edges={['top']}>
           <View style={styles.screenHeaderContent}>
             <Ionicons name="document-text" size={22} color="#fff" />
             <Text style={styles.screenHeaderTitle}>Notes</Text>
           </View>
           <Text style={styles.screenHeaderSub}>Appointment-ready notes — pin the important ones</Text>
-        </View>
+        </SafeAreaView>
       </View>
       <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <FlatList
@@ -356,4 +356,5 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.one,
   },
 });
+
 

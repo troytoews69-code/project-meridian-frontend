@@ -31,8 +31,6 @@ function TabButton({
   label,
   ...props
 }: TabTriggerSlotProps & { icon: keyof typeof Ionicons.glyphMap; activeIcon: keyof typeof Ionicons.glyphMap; label: string }) {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
   const color = isFocused ? '#fff' : 'rgba(255,255,255,0.6)';
 
   return (
@@ -54,8 +52,9 @@ export default function AppTabs() {
 
   return (
     <Tabs style={styles.container}>
+      <TabSlot style={styles.slot} />
       <TabList asChild>
-        <View style={[styles.tabBar, { backgroundColor: colors.primary, paddingTop: insets.top + Spacing.one }]}>
+        <View style={[styles.tabBar, { backgroundColor: colors.primary, paddingBottom: Math.max(insets.bottom, Spacing.two) }]}>
           {TABS.map((tab) => (
             <TabTrigger key={tab.name} name={tab.name} href={tab.href as any} asChild>
               <TabButton icon={tab.icon} activeIcon={tab.activeIcon} label={tab.label} />
@@ -63,7 +62,6 @@ export default function AppTabs() {
           ))}
         </View>
       </TabList>
-      <TabSlot style={styles.slot} />
     </Tabs>
   );
 }
@@ -77,9 +75,9 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    paddingBottom: Spacing.two,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(61,43,31,0.12)',
+    paddingTop: Spacing.two,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(255,255,255,0.2)',
   },
   tabItem: {
     flex: 1,

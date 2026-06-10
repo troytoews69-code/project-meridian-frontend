@@ -207,13 +207,13 @@ export default function CheckinScreen() {
   return (
     <ThemedView style={styles.root}>
       <View style={[styles.screenHeader, { backgroundColor: colors.primary }]}>
-        <View>
+        <SafeAreaView edges={['top']}>
           <View style={styles.screenHeaderContent}>
             <Ionicons name="clipboard" size={22} color="#fff" />
             <Text style={styles.screenHeaderTitle}>Daily Check-In</Text>
           </View>
           <Text style={styles.screenHeaderSub}>Capture today's wellness in under 2 minutes</Text>
-        </View>
+        </SafeAreaView>
       </View>
       <SafeAreaView style={styles.safeArea} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -518,4 +518,5 @@ const styles = StyleSheet.create({
     gap: Spacing.one,
   },
 });
+
 
