@@ -1,6 +1,61 @@
 # Women Over 40 Health App — Frontend
 
-React Native mobile app built with Expo, designed for women navigating perimenopause and menopause.
+## Project Overview
+
+A production-ready, full-stack mobile health application addressing a critical gap in women's healthcare technology. This React Native app serves as a comprehensive daily health companion for women navigating perimenopause and menopause—a market of 47 million women in the US alone, experiencing an underserved life transition lasting 7-10 years.
+
+### The Problem
+Women in midlife face complex, interconnected symptoms (mood changes, sleep disruption, hot flashes, brain fog) but lack tools designed specifically for their biology. Existing solutions are either period trackers built for younger demographics or clinical symptom loggers with poor user experience. Medical appointments average 12 minutes, leaving patients unable to effectively communicate complex symptom patterns.
+
+### The Solution
+This application provides:
+- **Daily check-in system** capturing mood, sleep quality, energy, symptoms, and menstrual flow
+- **Trend visualization** revealing patterns across weeks and months
+- **Evidence-based educational content** informed by current women's health research
+- **Doctor report generation** providing 30-day summaries for medical appointments
+- **Medication & appointment reminders** with local push notifications
+- **Private journaling** for personal reflection
+- **Thoughtful UI/UX** with warm, intentional design (rose tones, sage greens) prioritizing comfort over clinical sterility
+
+### Technical Implementation
+**Frontend (this repository):**
+- React Native with Expo SDK 55 (cross-platform iOS/Android)
+- TypeScript throughout (zero compiler errors)
+- Context API for global state management (authentication, user data)
+- Custom theming system with light/dark mode support
+- Expo Notifications for local push reminders
+- Secure token storage via expo-secure-store
+- EAS Build for cloud-compiled native binaries
+- Comprehensive onboarding flow collecting user health profile on first launch
+
+**Backend (separate repository):**
+- Node.js/Express REST API
+- MongoDB with Mongoose ODM for data persistence
+- JWT authentication with bcrypt password hashing
+- Protected routes with middleware-based authorization
+- Deployed to Render with automatic deploys from main branch
+
+**Key Technical Achievements:**
+- Built complete authentication flow from scratch (signup, login, token refresh, secure storage)
+- Implemented complex data aggregation for trend analysis across multiple health metrics
+- Designed and executed full production deployment pipeline (EAS Build → APK distribution)
+- Created reusable component library with consistent theming
+- Optimized for real-world mobile constraints (offline scenarios, token expiration, network errors)
+
+### Professional Deployment
+- Live REST API hosted on Render.com
+- Android APK built via Expo Application Services (EAS)
+- Distributed via direct download and Expo links
+- Source code available on GitHub (public repositories)
+- Ready for Google Play Store submission
+
+### Impact & Market
+- Addresses $600B+ global menopause market
+- Targets rapidly growing femtech sector ($75B projected by 2030)
+- Serves high-value demographic (ages 40-60) with disposable income
+- Demonstrates understanding of healthcare UX, accessibility, and patient empowerment
+
+This project showcases end-to-end mobile development skills, from ideation and user research through backend architecture, frontend implementation, and production deployment—all with attention to real user needs and professional software engineering practices.
 
 ---
 
